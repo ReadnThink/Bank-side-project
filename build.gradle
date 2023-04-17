@@ -34,6 +34,9 @@ dependencies {
     // jwt
     implementation group: 'com.auth0', name: 'java-jwt', version: '4.2.1'
 
+    // test 환경 Lombok 사용
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
