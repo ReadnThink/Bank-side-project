@@ -1,0 +1,25 @@
+server:
+  port: 5000 # 서버 포트 설정
+  servlet:
+    encoding:
+      charset: utf-8 # utf-8은 한글입니다.
+      force: true # 무슨일이 있어도 강제로 utf-8로 사용하겠다는 뜻입니다.
+
+spring:
+  # datasource, h2, jap를 같은 라인에 맞춰야 합니다.
+  datasource:
+    url: jdbc:mariadb://${rds.hostname}:${rds.port}/${rds.db.name}
+    driver-class-name: org.h2.Driver
+    username: ${rds.username}
+    password: ${rds.password}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none # 실제 배포환경에서는 ddl-auto를 사용하지 않음
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+logging:
+  level:
+    root: INFO
+
