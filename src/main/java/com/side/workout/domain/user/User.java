@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Entity
-public class Users {
+@Entity(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +30,7 @@ public class Users {
     private String email;
 
     @Column(nullable = false, length = 20)
-    private String full_name;
+    private String fullname;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
