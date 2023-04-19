@@ -1,0 +1,36 @@
+server:
+  port: 8080 # 서버 포트 설정
+  servlet:
+    encoding:
+      charset: utf-8 # utf-8은 한글입니다.
+      force: true # 무슨일이 있어도 강제로 utf-8로 사용하겠다는 뜻입니다.
+
+spring:
+  # datasource, h2, jap를 같은 라인에 맞춰야 합니다.
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MySQL # h2문법을 sql로 맞춤.
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        '[hibernate.format_sql]': true
+    show_sql: true
+  output:
+    ansi:
+      enabled: always
+
+
+logging:
+  level:
+    root: debug
+    '[org.hibernate.type]': TRACE
+
