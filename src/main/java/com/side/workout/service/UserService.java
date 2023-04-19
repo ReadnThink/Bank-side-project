@@ -1,9 +1,8 @@
-package com.side.workout.domain.service;
+package com.side.workout.service;
 
-import com.side.workout.domain.handler.ex.CustomApiException;
+import com.side.workout.handler.ex.CustomApiException;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
-import com.side.workout.dto.user.UserRespDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

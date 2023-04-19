@@ -20,6 +20,4 @@ public class UserRespDto {
             this.fullname = user.getFullname();
         }
     }
-
-
 }

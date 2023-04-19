@@ -4,6 +4,7 @@ import com.side.workout.config.dummy.DummyObject;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
 import com.side.workout.dto.user.UserRespDto;
+import com.side.workout.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,13 +28,10 @@ class UsersServiceTest extends DummyObject {
     // 진짜 = Spy, 가짜 = Mock
     @InjectMocks //가짜 Service를 주입합니다.
     private UserService userService;
-
     @Mock // 가짜로 만들어 주는 것입니다.
     private UserRepository userRepository;
-
     @Spy //Spy는 Spring IOC에 있는 것을 InjectMocks에 넣습니다.
     private BCryptPasswordEncoder passwordEncoder;
-
     @Test
     void join() {
 
@@ -47,7 +45,6 @@ class UsersServiceTest extends DummyObject {
         //stub -> 가정한다는 것입니다.
         when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 //        when(userRepository.findByUsername(any())).thenReturn(Optional.of(new User()));
-
 
         User userA = newMockUser(1L, "userA","test UserA");
         when(userRepository.save(any())).thenReturn(userA);
