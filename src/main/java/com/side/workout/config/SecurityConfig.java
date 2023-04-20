@@ -1,13 +1,16 @@
 package com.side.workout.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.side.workout.config.jwt.JwtAuthenticationFilter;
+import com.side.workout.config.jwt.JwtAuthorizationFilter;
 import com.side.workout.domain.user.UserEnum;
-import com.side.workout.dto.ResponseDto;
 import com.side.workout.util.CustomResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,6 +28,15 @@ public class SecurityConfig {
     }
 
     //JWT 필터 등록 필요합니다.
+    public class CustomSecurityFilterManager extends AbstractHttpConfigurer<CustomSecurityFilterManager, HttpSecurity>{
+        @Override
+        public void configure(HttpSecurity builder) throws Exception {
+            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
+            builder.addFilter(new JwtAuthenticationFilter(authenticationManager)); // AuthenticationManager를 넣어줘야 합니다.
+            builder.addFilter(new JwtAuthorizationFilter(authenticationManager));
+            super.configure(builder);
+        }
+    }
 
     //JWT 서버를 만들어 Session을 사용하지 않습니다.
     //Bean으로 등록해 주어야 합니다.
@@ -40,17 +52,25 @@ public class SecurityConfig {
         http.formLogin().disable();
         // httpBasic은 브라우저가 팝업창을 이용해서 사용자 인증을 진행합니다 -> 기능해제
         http.httpBasic().disable();
+        // 필터 적용
+        http.apply(new CustomSecurityFilterManager());
 
         // Exception 가로채기
+        // 인증 실패
         http.exceptionHandling().authenticationEntryPoint((request, response, authException) -> {
             String uri = request.getRequestURI();
             log.debug("디버그 : uri = {}", uri);
             if(uri.contains("admin")){
                 CustomResponseUtil.unAuthorization(response, "관리자로 로그인을 진행해 주세요.");
             }else{
-                CustomResponseUtil.unAuthentication(response, "로그인을 진행해 주세요");
+                CustomResponseUtil.fail(response, "로그인을 진행해 주세요", HttpStatus.UNAUTHORIZED);
             }
         });
+
+        // 권한 실패
+        http.exceptionHandling().accessDeniedHandler((request,response,e)->
+                    CustomResponseUtil.fail(response,"권한이 없습니다.", HttpStatus.FORBIDDEN)
+                );
 
         http.authorizeRequests()
                 .antMatchers("/api/s/**").authenticated() // 인증 - 로그인이 되어야 합니다.

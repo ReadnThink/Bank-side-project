@@ -1,8 +1,8 @@
 package com.side.workout.handler;
 
+import com.side.workout.dto.ResponseDto;
 import com.side.workout.handler.ex.CustomApiException;
 import com.side.workout.handler.ex.CustomValidationException;
-import com.side.workout.dto.ResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,12 @@ public class CustomExceptionHandler {
         log.error(e.getMessage());
         return new ResponseEntity<>(new ResponseDto<>(-1,e.getMessage(),null), HttpStatus.BAD_REQUEST);
     }
-
+    //추후 사용 예정
+//    @ExceptionHandler(CustomForbiddenException.class)
+//    public ResponseEntity<?> forbiddenException(CustomForbiddenException e){
+//        log.error(e.getMessage());
+//        return new ResponseEntity<>(new ResponseDto<>(-1,e.getMessage(),null), HttpStatus.FORBIDDEN);
+//    }
     @ExceptionHandler(CustomValidationException.class)
     public ResponseEntity<?> validationApiException(CustomValidationException e){
         log.error(e.getMessage());
