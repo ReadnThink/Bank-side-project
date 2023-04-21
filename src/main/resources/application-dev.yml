@@ -32,4 +32,5 @@ spring:
 logging:
   level:
     root: debug
+    '[org.hibernate.type]': TRACE # DummyDevInit 클래스의 init 메서드로 개발환경 실행시 UserA를 회원가입이 잘 되었나 확인하기 위함.
 

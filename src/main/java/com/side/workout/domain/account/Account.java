@@ -22,7 +22,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true,nullable = false, length = 20)
-    private Long account_number;
+    private Long accountNumber;
     @Column(nullable = false, length = 4)
     private Long password;
     @Column(nullable = false)

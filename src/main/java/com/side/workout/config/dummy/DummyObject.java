@@ -1,5 +1,6 @@
 package com.side.workout.config.dummy;
 
+import com.side.workout.domain.account.Account;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserEnum;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,6 +32,25 @@ public class DummyObject {
                 .email(username+"@nate.com")
                 .fullname(fullname)
                 .role(UserEnum.CUSTOMER)
+                .createAt(LocalDateTime.now())
+                .updateAt(LocalDateTime.now())
+                .build();
+    }
+    protected Account newAccount(Long number, User user){
+        return Account.builder()
+                .accountNumber(number)
+                .password(1234L)
+                .balance(1000L)
+                .users(user)
+                .build();
+    }
+    protected Account newMockAccount(Long id, Long number, Long balance, User user){
+        return Account.builder()
+                .id(id)
+                .accountNumber(number)
+                .password(1234L)
+                .balance(balance)
+                .users(user)
                 .createAt(LocalDateTime.now())
                 .updateAt(LocalDateTime.now())
                 .build();
