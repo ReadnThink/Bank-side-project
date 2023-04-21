@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.side.workout.config.dummy.DummyObject;
 import com.side.workout.domain.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.side.workout.dto.user.UserReqDto.JoinReqDto;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // 통합테스트 환경 -> 컨트롤러는 통합 테스트를 해야합니다.
 class UserControllerTest extends DummyObject {
@@ -34,10 +35,12 @@ class UserControllerTest extends DummyObject {
     public void setUp(){
         dataSetting();
     }
-    @AfterEach
-    public void setDown(){
-        userRepository.deleteAll();
-    }
+
+    //Rollback을 걸어 사용하지 않아도 됨
+//    @AfterEach
+//    public void setDown(){
+//        userRepository.deleteAll();
+//    }
 
     @Test
     void join_success_test() throws Exception {
