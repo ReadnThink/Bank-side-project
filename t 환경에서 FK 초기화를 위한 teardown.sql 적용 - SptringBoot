@@ -1,0 +1,119 @@
+[33mcommit ccc7f331ec5eab55d9523b9ce7ee4109ebe2af04[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: solbae <sol4854@naver.com>
+Date:   Sun Apr 23 22:52:10 2023 +0900
+
+    Test 환경에서 FK 초기화를 위한 teardown.sql 적용 - SptringBoot
+
+[33mcommit de71691777562c94c34d5abbc01709c344b6758e[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: solbae <sol4854@naver.com>
+Date:   Sun Apr 23 22:23:15 2023 +0900
+
+    계좌 삭제 서비스, 컨트롤러 테스트 성공
+
+[33mcommit a1c47f1248a18fe1d94e57658ea77750e9d9e1ce[m
+Author: solbae <sol4854@naver.com>
+Date:   Sun Apr 23 20:45:19 2023 +0900
+
+    AccountListRespDto -> AccountRespDto의 내부 클래스로 이동
+
+[33mcommit fb01d51256d90e188048fd3e254c966931f40fe4[m
+Author: solbae <sol4854@naver.com>
+Date:   Sun Apr 23 20:41:50 2023 +0900
+
+    유저 계좌 전체조회 서비스, 컨트롤러 구현 완료
+
+[33mcommit 6d0375afd67b7871593e8da9627f84961aeba0cb[m
+Author: solbae <sol4854@naver.com>
+Date:   Fri Apr 21 21:23:53 2023 +0900
+
+    계좌 등록 컨트롤러, 서비스 구현 및 테스트 통과
+
+[33mcommit 2380a109f8ad5efafe3ef9da71ed8b1abb7703a2[m
+Author: solbae <sol4854@naver.com>
+Date:   Fri Apr 21 17:35:38 2023 +0900
+
+    JwtAuthorizationFilterTest 테스트 완료
+
+[33mcommit 66d626c33b131af306c45a2eac935ac8710eadd1[m
+Author: solbae <sol4854@naver.com>
+Date:   Fri Apr 21 17:17:41 2023 +0900
+
+    JwtAuthenticationFilterTest 테스트 완료
+
+[33mcommit a6c8f9cecf71dbde0e0f9652bdf378198e97a0f2[m
+Author: solbae <sol4854@naver.com>
+Date:   Fri Apr 21 16:42:20 2023 +0900
+
+    Jwt 토큰 생성 및 검증 테스트 완료
+
+[33mcommit 9c2e68d00a26c7d59a46dc2f16114cb4d97ee418[m
+Author: solbae <sol4854@naver.com>
+Date:   Thu Apr 20 20:54:58 2023 +0900
+
+    Jwt 인증/인가 구현
+
+[33mcommit 1cd726fd3f0952b67131eda3a73dce432de907eb[m
+Author: solbae <sol4854@naver.com>
+Date:   Wed Apr 19 21:10:17 2023 +0900
+
+    removed cached
+
+[33mcommit 23ba11a1bc71189b3abba2e319df9f164a7c66bc[m
+Author: solbae <sol4854@naver.com>
+Date:   Wed Apr 19 21:08:34 2023 +0900
+
+    removed cached
+
+[33mcommit ad750355b4b628613e511a28bede531d020692bd[m
+Author: solbae <sol4854@naver.com>
+Date:   Wed Apr 19 21:08:01 2023 +0900
+
+    removed cached
+
+[33mcommit 2687ce93ba2459c995f61967ece37cc5766bbdfa[m
+Author: solbae <sol4854@naver.com>
+Date:   Wed Apr 19 21:06:38 2023 +0900
+
+    removed cached
+
+[33mcommit 741e559e62694d2e331e85fd77dc2446863f8169[m
+Author: solbae <sol4854@naver.com>
+Date:   Wed Apr 19 21:03:14 2023 +0900
+
+    git ignore setting
+
+[33mcommit c13839bb1c394f39bc12950a80ee9f714ebd631d[m
+Author: solbae <sol4854@naver.com>
+Date:   Wed Apr 19 21:01:08 2023 +0900
+
+    회원가입 컨트롤러 테스트 / 유효성검사
+
+[33mcommit 22e4c362fe2b611018c8c944723595a41d8c8fd1[m
+Author: solbae <sol4854@naver.com>
+Date:   Tue Apr 18 22:21:53 2023 +0900
+
+    회원가입 서비스 테스트 완료
+
+[33mcommit 9dab26336c410dd05801870014487b3d1cb23b79[m
+Author: solbae <sol4854@naver.com>
+Date:   Mon Apr 17 22:44:02 2023 +0900
+
+    시큐리티 필터 등록 및 인증/인가  테스트
+
+[33mcommit d3a7a1f16c1585f0ae5d4c13bc8174b1f3ce017a[m
+Author: solbae <sol4854@naver.com>
+Date:   Mon Apr 17 18:46:40 2023 +0900
+
+    Entity 설계
+
+[33mcommit 70d5131f1368d5ebf4f3b1d4865bbe8714a75a35[m
+Author: solbae <sol4854@naver.com>
+Date:   Mon Apr 17 18:06:00 2023 +0900
+
+    first commit
+
+[33mcommit e84e53668608b08f33fc725035adde976cefb8ab[m
+Author: solbae <sol4854@naver.com>
+Date:   Mon Apr 17 18:04:23 2023 +0900
+
+    first commit

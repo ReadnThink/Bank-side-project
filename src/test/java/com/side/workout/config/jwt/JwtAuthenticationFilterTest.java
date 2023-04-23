@@ -12,9 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.side.workout.dto.user.UserReqDto.LoginReqDto;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,7 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-@Transactional //테스트 환경에서 종료시 롤백
+//@Transactional //테스트 환경에서 종료시 롤백
+@Sql("classpath:db/teardown.sql") // SpringBootTest 통합테스트 하는곳에 전부 teardown.sql을 붙여주자 -> beforeEach 실행 직전 마다 실행됩니다.
 @ActiveProfiles("test") // test yml을 사용
 @AutoConfigureMockMvc // Mockito 환경에 mockMvc를 DI하려면 필요합니다.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) //가짜 환경 시작

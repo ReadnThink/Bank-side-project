@@ -10,16 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 import static com.side.workout.dto.user.UserReqDto.JoinReqDto;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
-@Transactional
+//@Transactional //테스트 환경에서 종료시 롤백
+@Sql("classpath:db/teardown.sql") // SpringBootTest 통합테스트 하는곳에 전부 teardown.sql을 붙여주자 -> beforeEach 실행 직전 마다 실행됩니다.
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // 통합테스트 환경 -> 컨트롤러는 통합 테스트를 해야합니다.
 class UserControllerTest extends DummyObject {
@@ -31,9 +36,13 @@ class UserControllerTest extends DummyObject {
     @Autowired
     private ObjectMapper om;
 
+    @Autowired
+    EntityManager em;
+
     @BeforeEach
     public void setUp(){
-        dataSetting();
+        userRepository.save(newUser("userB","userB"));
+        em.clear();
     }
 
     //Rollback을 걸어 사용하지 않아도 됨
@@ -87,10 +96,5 @@ class UserControllerTest extends DummyObject {
 
         //then
         resultActions.andExpect(status().isBadRequest());
-    }
-
-    private void dataSetting(){
-        // 중복 아이디를 테스트하기 위해 만듬
-        userRepository.save(newUser("userB","userB"));
     }
 }
