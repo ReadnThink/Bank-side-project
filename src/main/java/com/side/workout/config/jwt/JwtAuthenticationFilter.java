@@ -73,6 +73,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.debug("디버그 : successfulAuthentication 호출됨 로그인 세션 등록 완료");
         LoginUser loginUser = (LoginUser) authResult.getPrincipal();
         String jwtToken = JwtProcess.create(loginUser);
+        // 헤더에 토큰 담아서 응답
         response.addHeader(JwtVO.HEADER, jwtToken);
 
         LoginRespDto loginRespDto = new LoginRespDto(loginUser.getUser());

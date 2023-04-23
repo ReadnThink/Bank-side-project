@@ -4,11 +4,13 @@ import com.side.workout.domain.account.Account;
 import com.side.workout.domain.account.AccountRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
+import com.side.workout.dto.account.AccountListRespDto;
 import com.side.workout.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
@@ -21,6 +23,16 @@ public class AccountService {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+
+    public AccountListRespDto findAccountList(Long userId) {
+        User userPS = userRepository.findById(userId).orElseThrow(
+                () -> new CustomApiException("유저를 찾을 수 없습니다.")
+        );
+
+        // 유저의 모든 계좌 목록
+        List<Account> accountListPS = accountRepository.findByUsers_id(userPS.getId());
+        return new AccountListRespDto(userPS, accountListPS);
+    }
 
     @Transactional // 커밋해야함
     public AccountCreateRespDto createAccount(AccountCreateReqDto accountCreateReqDto, Long userId){
@@ -41,8 +53,4 @@ public class AccountService {
         // DTO 응당
         return new AccountCreateRespDto(accountPS);
     }
-
-
-
-
 }
