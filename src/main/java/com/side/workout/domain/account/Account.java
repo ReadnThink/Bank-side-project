@@ -1,6 +1,7 @@
 package com.side.workout.domain.account;
 
 import com.side.workout.domain.user.User;
+import com.side.workout.handler.ex.CustomApiException;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -39,4 +40,10 @@ public class Account {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updateAt;
+
+    public void checkOwner(Long userId) {
+        if(users.getId() != userId){ // Lazy 로딩이여도 id를 조회할 때는 select 쿼리가 날라가지 않는다.
+            throw new CustomApiException("계좌 소유자가 아닙니다.");
+        }
+    }
 }

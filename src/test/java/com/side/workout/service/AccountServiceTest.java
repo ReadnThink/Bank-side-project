@@ -7,6 +7,7 @@ import com.side.workout.domain.account.Account;
 import com.side.workout.domain.account.AccountRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
+import com.side.workout.handler.ex.CustomApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
 import static com.side.workout.dto.account.AccountRespDto.AccountCreateRespDto;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -65,5 +67,38 @@ class AccountServiceTest extends DummyObject {
         log.info("테스트 : {}", responseBody);
         //then
         Assertions.assertThat(accountCreateRespDto.getNumber()).isEqualTo(1111L);
+    }
+
+    @Test
+    void delete_account_success() {
+        //given
+        Long accountNumber = 1111L;
+        Long userId = 1L;
+
+        // stub
+        User userA = newMockUser(userId, "userA", "유저A");
+        Account userAAccount = newMockAccount(userId, 1111L, 1000L, userA);
+        when(accountRepository.findByAccountNumber(any())).thenReturn(Optional.of(userAAccount));
+
+        //when
+        accountService.deleteAccount(accountNumber, userId);
+
+        //then
+    }
+
+    @Test
+    void delete_account_fail_유저아이디불일치() {
+        //given
+        Long accountNumber = 1111L;
+        Long userId = 1L;
+        Long failUserId = 2L;
+
+        // stub
+        User userA = newMockUser(userId, "userA", "유저A");
+        Account userAAccount = newMockAccount(userId, 1111L, 1000L, userA);
+        when(accountRepository.findByAccountNumber(any())).thenReturn(Optional.of(userAAccount));
+
+        //when
+        assertThrows(CustomApiException.class, () -> accountService.deleteAccount(accountNumber, failUserId));
     }
 }

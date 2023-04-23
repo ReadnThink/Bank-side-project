@@ -2,9 +2,13 @@ package com.side.workout.web.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.side.workout.config.dummy.DummyObject;
+import com.side.workout.domain.account.Account;
+import com.side.workout.domain.account.AccountRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
+import com.side.workout.handler.ex.CustomApiException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,9 +44,21 @@ class AccountControllerTest extends DummyObject {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private EntityManager em;
+
     @BeforeEach
     public void setUp(){
         User userA = userRepository.save(newUser("userA", "유저A"));
+        User userB = userRepository.save(newUser("userB", "유저B"));
+
+        Account userAAccount = accountRepository.save(newAccount(1111L, userA));
+        Account userBAccount = accountRepository.save(newAccount(2222L, userB));
+
+        em.clear();
     }
 
     // jwt token -> 인증필터 -> 시큐리티 세션생성
@@ -56,11 +75,48 @@ class AccountControllerTest extends DummyObject {
         log.info("테스트 : requestBody {}", requestBody);
 
         //when
-        ResultActions resultActions = mockMvc.perform(post("/api/s/account").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        ResultActions resultActions = mockMvc.
+                perform(post("/api/s/account").content(requestBody).contentType(MediaType.APPLICATION_JSON));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         log.info("테스트 : responseBody {}", responseBody);
 
         //then
         resultActions.andExpect(status().isCreated());
     }
+
+    /**
+     *  delete는 Http 바디가 없기떄문에 content, contentType이 필요 없습니다.
+     *
+     *  Lazy 로딩이여도 id를 조회할 때는 select 쿼리가 날라가지 않는다.
+     *    - 영속성 컨텍스트에 들어가는 조건은 Id값이 무조건 있어야 하기때문에 id만 조회하는경우에는 쿼리를 날리지 않습니다.
+     *    - 만약 id가 아닌 다른 필드를 조회한다면, 쿼리를 날립니다. (영속성 컨텍스트에 없을 경우에만)
+     *
+     *  Test시에 insert 한것들이 전부 영속성 컨텍스트에 올라갑니다.
+     *  영속화 된것들을 초기화 해주는것이 개발모드와 동일한 환경으로 테스트를 할 수 있게 해줍니다.
+     *
+     *  최초 select는 쿼리가 발생하지만, 영속성 컨텍스트에 있다면 1차캐시에 있는 객체를 조회하여 쿼리가 날라가지 않습니다.
+     *  즉, Lazy 로딩은 PC에 있다면 쿼리 발생 x
+     *  Lazy로딩 시 PC에 없다면 쿼리 발생
+     */
+    @WithUserDetails(value = "userA", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    void delete_account_success() throws Exception {
+        //given
+        Long accountNumber = 1111L;
+        //when
+        ResultActions resultActions = mockMvc.
+                perform(delete("/api/s/account/" + accountNumber));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.info("테스트 : responseBody {}", responseBody);
+
+        //then
+        //Junit 테스트에서 delete 쿼리는 DB관련(DML)마지막 실행되면 발동안됨.
+        Assertions.assertThrows(CustomApiException.class, ()-> accountRepository.findByAccountNumber(accountNumber).orElseThrow(
+                () -> new CustomApiException("계좌를 찾을 수 없습니다.")
+        ));
+    }
+
+    //실패 - 계좌 소유자가 아님
+
+    //실패 - 없는 계좌
 }
