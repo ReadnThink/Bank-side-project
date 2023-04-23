@@ -2,7 +2,7 @@ package com.side.workout.web.api;
 
 import com.side.workout.config.auth.LoginUser;
 import com.side.workout.dto.ResponseDto;
-import com.side.workout.dto.account.AccountListRespDto;
+import com.side.workout.dto.account.AccountRespDto.AccountListRespDto;
 import com.side.workout.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

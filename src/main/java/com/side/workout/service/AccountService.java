@@ -4,7 +4,7 @@ import com.side.workout.domain.account.Account;
 import com.side.workout.domain.account.AccountRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
-import com.side.workout.dto.account.AccountListRespDto;
+import com.side.workout.dto.account.AccountRespDto.AccountListRespDto;
 import com.side.workout.handler.ex.CustomApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
