@@ -11,8 +11,8 @@ import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
 class JwtProcessTest {
-    @Test
-    void token_create_test() {
+
+    private String createToken(){
         //given
         // 토큰 생성을 위해 토큰에 넣을 User 생성
         User user = User.builder().id(1L).role(UserEnum.CUSTOMER).build();
@@ -20,6 +20,15 @@ class JwtProcessTest {
 
         //when
         String jwtToken = JwtProcess.create(loginUser);
+        return jwtToken;
+    }
+
+    @Test
+    void token_create_test() {
+        //given
+
+        //when
+        String jwtToken = createToken();
         log.info("테스트 : {}", jwtToken);
 
         //then
@@ -29,12 +38,13 @@ class JwtProcessTest {
     @Test
     void token_verify_test() {
         //given
-        String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3b3JrIG91dCIsInJvbGUiOiJDVVNUT01FUiIsImlkIjoxLCJleHAiOjE2ODI2NjcxNjJ9.FS9CRoPsxEsIqPFxhyZEduxJo1MYuRfvcghClMb85ra7qQuXYDRAj6aAeMtKtv1u0etG4UFBac4RG4L7DLe9yw";
+        String token = createToken();
+        String jwtToken = token.replace(JwtVO.TOKEN_PREFIX, ""); // Bearer 제거
         //when
-        LoginUser loginUser = JwtProcess.verify(jwtToken);
-        log.info("테스트 loginUser: {}", loginUser.getUser().getId());
+        LoginUser loginUser2 = JwtProcess.verify(jwtToken);
+        log.info("테스트 loginUser: {}", loginUser2.getUser().getId());
         //then
-        assertThat(loginUser.getUser().getId()).isEqualTo(1L);
-        assertThat(loginUser.getUser().getRole()).isEqualTo(UserEnum.CUSTOMER);
+        assertThat(loginUser2.getUser().getId()).isEqualTo(1L);
+        assertThat(loginUser2.getUser().getRole()).isEqualTo(UserEnum.CUSTOMER);
     }
 }
