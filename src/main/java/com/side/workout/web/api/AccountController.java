@@ -41,4 +41,10 @@ public class AccountController {
         accountService.deleteAccount(accountNumber, loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "계좌삭제 성공", null), HttpStatus.OK);
     }
+
+    @PostMapping("/account/deposit") // 인증 필요없음
+    public ResponseEntity<?> depositAccount(@RequestBody @Valid AccountService.AccountDepositReqDto accountDepositReqDto, BindingResult bindingResult){
+        AccountService.AccountDepositRespDto accountDepositRespDto = accountService.deposit(accountDepositReqDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "계좌입금 성공", accountDepositRespDto), HttpStatus.OK);
+    }
 }

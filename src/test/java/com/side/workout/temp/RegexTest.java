@@ -69,4 +69,32 @@ public class RegexTest {
         boolean result = Pattern.matches("^[a-zA-Z0-9]{2,10}@[a-zA-Z0-9]{2,6}\\.[a-zA-Z0-9]{2,3}$", value);
         log.info("테스트 : {}",result);
     }
+
+    @Test
+    void account_category_test1() {
+        String category ="DEPOSIT";
+        boolean result = Pattern.matches("^(DEPOSIT)$", category);
+        log.info("테스트 : {}",result);
+    }
+
+    @Test
+    void account_category_test2() {
+        String category ="TRANSFER";
+        boolean result = Pattern.matches("^(DEPOSIT|TRANSFER)$", category);
+        log.info("테스트 : {}",result);
+    }
+
+    @Test
+    void account_tel_test1() {
+        String tel ="010-1234-1234";
+        boolean result = Pattern.matches("^[0-9]{3}-[0-9]{4}-[0-9]{4}$", tel);
+        log.info("테스트 : {}",result);
+    }
+
+    @Test
+    void account_tel_test2() {
+        String tel ="01011112222";
+        boolean result = Pattern.matches("^[0-9]{11}", tel);
+        log.info("테스트 : {}",result);
+    }
 }
