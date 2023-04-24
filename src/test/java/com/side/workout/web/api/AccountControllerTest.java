@@ -6,6 +6,7 @@ import com.side.workout.domain.account.Account;
 import com.side.workout.domain.account.AccountRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
+import com.side.workout.dto.account.AccountReqDto;
 import com.side.workout.handler.ex.CustomApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -120,4 +121,32 @@ class AccountControllerTest extends DummyObject {
     //실패 - 계좌 소유자가 아님
 
     //실패 - 없는 계좌
+
+
+    /**
+     *  Dto 잘 만들어졌는지 ObjectMapper 확인은 공식!
+     */
+    @Test
+    void deposit_account_test() throws Exception {
+        //given
+        AccountReqDto.AccountDepositReqDto accountDepositReqDto = new AccountReqDto.AccountDepositReqDto();
+        accountDepositReqDto.setNumber(1111L);
+        accountDepositReqDto.setAmount(100L);
+        accountDepositReqDto.setCategory("DEPOSIT");
+        accountDepositReqDto.setTel("01011112222");
+        String requestBody = om.writeValueAsString(accountDepositReqDto);
+        log.info("테스트 : requestBody {}", requestBody);
+
+        //when
+        ResultActions resultActions = mockMvc.
+                perform(post("/api/account/deposit").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.info("테스트 : responseBody {}", responseBody);
+
+        //then
+        resultActions.andExpect(status().isCreated());
+        /**
+         * 잔액이 확인하고 싶다면 TransactionDto 에서 @JsonIgnore 지우고 depositAccountBalance를 확인할 수 있다.
+         */
+    }
 }

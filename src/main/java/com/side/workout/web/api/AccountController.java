@@ -47,6 +47,6 @@ public class AccountController {
     @PostMapping("/account/deposit") // 인증 필요없음
     public ResponseEntity<?> depositAccount(@RequestBody @Valid AccountDepositReqDto accountDepositReqDto, BindingResult bindingResult){
         AccountDepositRespDto accountDepositRespDto = accountService.deposit(accountDepositReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "계좌입금 성공", accountDepositRespDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "계좌입금 성공", accountDepositRespDto), HttpStatus.CREATED);
     }
 }

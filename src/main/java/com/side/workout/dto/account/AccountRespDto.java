@@ -36,7 +36,7 @@ public class AccountRespDto {
             private Long amount;
             private String tel;
             private String createAt;
-            @JsonIgnore // 클라이언트에게 전달x -> 서비스단에서 테스트 용도
+            @JsonIgnore // 클라이언트에게 전달x -> 컨트롤러에서 테스트 용도
             private Long depositAccountBalance;
 
             public TransactionDto(Transaction transaction) {

@@ -114,7 +114,7 @@ class AccountServiceTest extends DummyObject {
         AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
         accountDepositReqDto.setNumber(1111L);
         accountDepositReqDto.setAmount(100L);
-        accountDepositReqDto.setCategory(TransactionCategory.DEPOSIT.getValue());
+        accountDepositReqDto.setCategory("DEPOSIT");
         accountDepositReqDto.setTel("01011112222");
 
         /**
@@ -149,7 +149,7 @@ class AccountServiceTest extends DummyObject {
         AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
         accountDepositReqDto.setNumber(1111L);
         accountDepositReqDto.setAmount(100L);
-        accountDepositReqDto.setCategory(TransactionCategory.DEPOSIT.getValue());
+        accountDepositReqDto.setCategory("DEPOSIT");
         accountDepositReqDto.setTel("01011112222");
 
         // stub 1
@@ -195,7 +195,7 @@ class AccountServiceTest extends DummyObject {
         AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
         accountDepositReqDto.setNumber(4444L);
         accountDepositReqDto.setAmount(100L);
-        accountDepositReqDto.setCategory(TransactionCategory.DEPOSIT.getValue());
+        accountDepositReqDto.setCategory("DEPOSIT");
         accountDepositReqDto.setTel("01011112222");
 
         //when
