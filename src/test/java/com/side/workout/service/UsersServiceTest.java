@@ -1,10 +1,9 @@
-package com.side.workout.domain.service;
+package com.side.workout.service;
 
 import com.side.workout.config.dummy.DummyObject;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
 import com.side.workout.dto.user.UserRespDto;
-import com.side.workout.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
