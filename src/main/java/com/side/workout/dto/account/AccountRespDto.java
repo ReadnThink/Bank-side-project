@@ -1,7 +1,10 @@
 package com.side.workout.dto.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.side.workout.domain.account.Account;
+import com.side.workout.domain.transaction.Transaction;
 import com.side.workout.domain.user.User;
+import com.side.workout.util.CustomDateUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +13,44 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AccountRespDto {
+    @Setter
+    @Getter
+    public static class AccountDepositRespDto{
+        private Long id; // 계좌 id
+        private Long number; // 계좌번호
+        private TransactionDto transaction;
+
+        public AccountDepositRespDto(Account account, Transaction trancaction) {
+            this.id = account.getId();
+            this.number = account.getAccountNumber();
+            this.transaction = new TransactionDto(trancaction); // dto로 만드는 이유는 Entity를 컨트롤러에 노출하게되면 순환참조 발생 위험이 있다. (어노테이션 사용시 순환참조 발생)
+        }
+
+        @Setter
+        @Getter
+        public class TransactionDto{
+            private Long id;
+            private String category;
+            private String sender;
+            private String receiver;
+            private Long amount;
+            private String tel;
+            private String createAt;
+            @JsonIgnore // 클라이언트에게 전달x -> 서비스단에서 테스트 용도
+            private Long depositAccountBalance;
+
+            public TransactionDto(Transaction transaction) {
+                this.id = transaction.getId();
+                this.category = transaction.getTransaction_category().getValue();
+                this.sender = transaction.getSender();
+                this.receiver = transaction.getReceiver();
+                this.amount = transaction.getAmount();
+                this.depositAccountBalance = transaction.getDepositAccountBalance();
+                this.tel = transaction.getTel();
+                this.createAt = CustomDateUtil.toStringFormat(transaction.getCreateAt());
+            }
+        }
+    }
     @Setter
     @Getter
     public static class  AccountCreateRespDto{

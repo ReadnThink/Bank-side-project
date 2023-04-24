@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
+import static com.side.workout.dto.account.AccountReqDto.AccountDepositReqDto;
 import static com.side.workout.dto.account.AccountRespDto.AccountCreateRespDto;
+import static com.side.workout.dto.account.AccountRespDto.AccountDepositRespDto;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -43,8 +45,8 @@ public class AccountController {
     }
 
     @PostMapping("/account/deposit") // 인증 필요없음
-    public ResponseEntity<?> depositAccount(@RequestBody @Valid AccountService.AccountDepositReqDto accountDepositReqDto, BindingResult bindingResult){
-        AccountService.AccountDepositRespDto accountDepositRespDto = accountService.deposit(accountDepositReqDto);
+    public ResponseEntity<?> depositAccount(@RequestBody @Valid AccountDepositReqDto accountDepositReqDto, BindingResult bindingResult){
+        AccountDepositRespDto accountDepositRespDto = accountService.deposit(accountDepositReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "계좌입금 성공", accountDepositRespDto), HttpStatus.OK);
     }
 }

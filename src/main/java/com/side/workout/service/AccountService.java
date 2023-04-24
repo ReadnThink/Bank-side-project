@@ -1,6 +1,5 @@
 package com.side.workout.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.side.workout.domain.account.Account;
 import com.side.workout.domain.account.AccountRepository;
 import com.side.workout.domain.transaction.Transaction;
@@ -10,22 +9,17 @@ import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
 import com.side.workout.dto.account.AccountRespDto.AccountListRespDto;
 import com.side.workout.handler.ex.CustomApiException;
-import com.side.workout.util.CustomDateUtil;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Optional;
 
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
+import static com.side.workout.dto.account.AccountReqDto.AccountDepositReqDto;
 import static com.side.workout.dto.account.AccountRespDto.AccountCreateRespDto;
+import static com.side.workout.dto.account.AccountRespDto.AccountDepositRespDto;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -111,59 +105,9 @@ public class AccountService {
         return new AccountDepositRespDto(depositAccountPS, transactionPS);
     }
 
-    @Setter
-    @Getter
-    public static class AccountDepositRespDto{
-        private Long id; // 계좌 id
-        private Long number; // 계좌번호
-        private TransactionDto transaction;
 
-        public AccountDepositRespDto(Account account, Transaction trancaction) {
-            this.id = account.getId();
-            this.number = account.getAccountNumber();
-            this.transaction = new TransactionDto(trancaction); // dto로 만드는 이유는 Entity를 컨트롤러에 노출하게되면 순환참조 발생 위험이 있다. (어노테이션 사용시 순환참조 발생)
-        }
 
-        @Setter
-        @Getter
-        public class TransactionDto{
-            private Long id;
-            private String category;
-            private String sender;
-            private String receiver;
-            private Long amount;
-            private String tel;
-            private String createAt;
-            @JsonIgnore // 클라이언트에게 전달x -> 서비스단에서 테스트 용도
-            private Long depositAccountBalance;
 
-            public TransactionDto(Transaction transaction) {
-                this.id = transaction.getId();
-                this.category = transaction.getTransaction_category().getValue();
-                this.sender = transaction.getSender();
-                this.receiver = transaction.getReceiver();
-                this.amount = transaction.getAmount();
-                this.depositAccountBalance = transaction.getDepositAccountBalance();
-                this.tel = transaction.getTel();
-                this.createAt = CustomDateUtil.toStringFormat(transaction.getCreateAt());
-            }
-        }
-    }
-
-    @Getter
-    @Setter
-    public static class AccountDepositReqDto{
-        @NotNull
-        @Digits(integer = 4, fraction = 10)
-        private Long number;
-        @NotNull
-        private Long amount;
-        @NotEmpty
-        @Pattern(regexp = "^(DEPOSIT)$")
-        private String category; // DEPOSIT
-        @Pattern(regexp = "^[0-9]{11}")
-        private String tel;
-    }
 
 
 }
