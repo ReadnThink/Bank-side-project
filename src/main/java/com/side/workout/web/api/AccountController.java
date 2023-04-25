@@ -47,10 +47,17 @@ public class AccountController {
         return new ResponseEntity<>(new ResponseDto<>(1, "계좌입금 성공", accountDepositRespDto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/s/account/withdraw") // 인증 필요없음
+    @PostMapping("/s/account/withdraw")
     public ResponseEntity<?> withdrawAccount(@RequestBody @Valid AccountWithdrawReqDto accountWithdrawReqDto, BindingResult bindingResult,
                                              @AuthenticationPrincipal LoginUser loginUser){
         AccountWithdrawRespDto accountWithdrawRespDto = accountService.withdraw(accountWithdrawReqDto, loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "계좌출금 성공", accountWithdrawRespDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/s/account/transfer")
+    public ResponseEntity<?> withdrawAccount(@RequestBody @Valid AccountTransferReqDto accountTransferReqDto, BindingResult bindingResult,
+                                             @AuthenticationPrincipal LoginUser loginUser){
+        AccountTransferRespDto accountTransferRespDto = accountService.transfer(accountTransferReqDto, loginUser.getUser().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "계좌이체 성공", accountTransferRespDto), HttpStatus.CREATED);
     }
 }
