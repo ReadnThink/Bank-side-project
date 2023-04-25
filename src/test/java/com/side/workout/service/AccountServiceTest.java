@@ -229,4 +229,31 @@ class AccountServiceTest extends DummyObject {
     }
 
 
+    @Test
+    void withdraw_test() {
+        // given
+        Long amount = 100L;
+        Long password = 1234L;
+        Long userId = 1L;
+
+        User userA = newMockUser(1L, "userA", "유저A");
+        Account userAAccount = newMockAccount(1L, 1111L, 1000L, userA);
+
+        //when
+        // 0원 체크
+        if(amount <= 0L){
+            throw new CustomApiException("0원 이하의 금액을 입금할 수 없습니다.");
+        }
+        // 소유자 확인
+        userAAccount.checkOwner(userId);
+        // 패스워드 확인
+        userAAccount.checkPassword(password);
+        // 잔액 확인
+//        userAAccount.checkBalance(amount);
+        // 출금
+        userAAccount.withdraw(amount);
+
+        //then
+        assertThat(userAAccount.getBalance()).isEqualTo(900L);
+    }
 }

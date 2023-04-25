@@ -29,7 +29,7 @@ public class AccountReqDto {
     @Setter
     public static class AccountCreateReqDto{
         @NotNull
-        @Digits(integer = 4, fraction = 20)
+        @Digits(integer = 4, fraction = 10)
         private Long number;
         @NotNull
         @Digits(integer = 4, fraction = 4)

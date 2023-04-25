@@ -7,19 +7,23 @@ import com.side.workout.domain.transaction.TransactionCategory;
 import com.side.workout.domain.transaction.TransactionRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
-import com.side.workout.dto.account.AccountRespDto.AccountListRespDto;
 import com.side.workout.handler.ex.CustomApiException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Optional;
 
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
 import static com.side.workout.dto.account.AccountReqDto.AccountDepositReqDto;
-import static com.side.workout.dto.account.AccountRespDto.AccountCreateRespDto;
-import static com.side.workout.dto.account.AccountRespDto.AccountDepositRespDto;
+import static com.side.workout.dto.account.AccountRespDto.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -89,10 +93,10 @@ public class AccountService {
 
         //거래 내역 남기기
         Transaction transaction = Transaction.builder()
-                .depositAccount(depositAccountPS)
                 .withdrawAccount(null)
-                .depositAccountBalance(depositAccountPS.getBalance())
+                .depositAccount(depositAccountPS)
                 .withdrawAccountBalance(null)
+                .depositAccountBalance(depositAccountPS.getBalance())
                 .amount(accountDepositReqDto.getAmount())
                 .transaction_category(TransactionCategory.DEPOSIT)
                 .sender("ATM")
@@ -105,9 +109,57 @@ public class AccountService {
         return new AccountDepositRespDto(depositAccountPS, transactionPS);
     }
 
+    @Transactional
+    public AccountWithdrawRespDto withdraw(AccountWithdrawReqDto accountWithdrawReqDto, Long userId){
+        // 0원 체크
+        if(accountWithdrawReqDto.getAmount() <= 0L){
+            throw new CustomApiException("0원 이하의 금액을 입금할 수 없습니다.");
+        }
 
+        // 출금 계좌 확인
+        Account withdrawAccountPS = accountRepository.findByAccountNumber(accountWithdrawReqDto.getNumber())
+                .orElseThrow(
+                        () -> new CustomApiException("계좌를 찾을 수 없습니다.")
+                );
+        // 출금 소유자 확인 (로그인한 사람과 동일한지)
+        withdrawAccountPS.checkOwner(userId);
+        // 출금계좌 비밀번호 확인
+        withdrawAccountPS.checkPassword(accountWithdrawReqDto.getPassword());
+        // 출금계좌 잔액 확인
+        withdrawAccountPS.checkBalance(accountWithdrawReqDto.getAmount());
+        // 출금하기
+        withdrawAccountPS.withdraw(accountWithdrawReqDto.getAmount());
+        //거래 내역 남기기 (내 계좌에서 ATM으로 출금)
+        Transaction transaction = Transaction.builder()
+                .withdrawAccount(withdrawAccountPS)
+                .depositAccount(null)
+                .withdrawAccountBalance(withdrawAccountPS.getBalance())
+                .depositAccountBalance(null)
+                .amount(accountWithdrawReqDto.getAmount())
+                .transaction_category(TransactionCategory.WITHDRAW)
+                .sender(accountWithdrawReqDto.getNumber()+"")
+                .receiver("ATM")
+                .build();
+        Transaction transactionPS = transactionRepository.save(transaction);
+        // DTO 응답
+        return new AccountWithdrawRespDto(withdrawAccountPS, transactionPS);
+    }
 
+    @Setter
+    @Getter
+    public static class AccountWithdrawReqDto{
+        @NotNull
+        @Digits(integer = 4, fraction = 10)
+        private Long number;
+        @NotNull
+        @Digits(integer = 4, fraction = 4)
+        private Long password;
+        @NotNull
+        private Long amount;
+        @NotEmpty
+        @Pattern(regexp = "WITHDRAW")
+        private String category;
 
-
+    }
 
 }
