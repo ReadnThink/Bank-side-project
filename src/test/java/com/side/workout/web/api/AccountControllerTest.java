@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import javax.persistence.EntityManager;
 
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
+import static com.side.workout.service.AccountService.AccountWithdrawReqDto;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -134,6 +135,7 @@ class AccountControllerTest extends DummyObject {
         accountDepositReqDto.setAmount(100L);
         accountDepositReqDto.setCategory("DEPOSIT");
         accountDepositReqDto.setTel("01011112222");
+
         String requestBody = om.writeValueAsString(accountDepositReqDto);
         log.info("테스트 : requestBody {}", requestBody);
 
@@ -148,5 +150,27 @@ class AccountControllerTest extends DummyObject {
         /**
          * 잔액이 확인하고 싶다면 TransactionDto 에서 @JsonIgnore 지우고 depositAccountBalance를 확인할 수 있다.
          */
+    }
+
+    @WithUserDetails(value = "userA", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    void withdrawAccount_test() throws Exception {
+        //given
+        AccountWithdrawReqDto accountWithdrawReqDto = new AccountWithdrawReqDto();
+        accountWithdrawReqDto.setNumber(1111L);
+        accountWithdrawReqDto.setPassword(1234L);
+        accountWithdrawReqDto.setAmount(100L);
+        accountWithdrawReqDto.setCategory("WITHDRAW");
+
+        String requestBody = om.writeValueAsString(accountWithdrawReqDto);
+        log.info("테스트 : requestBody {}", requestBody);
+        //when
+        ResultActions resultActions = mockMvc.
+                perform(post("/api/s/account/withdraw").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.info("테스트 : responseBody {}", responseBody);
+
+        //then
+        resultActions.andExpect(status().isCreated());
     }
 }

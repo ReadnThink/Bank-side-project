@@ -2,7 +2,6 @@ package com.side.workout.web.api;
 
 import com.side.workout.config.auth.LoginUser;
 import com.side.workout.dto.ResponseDto;
-import com.side.workout.dto.account.AccountRespDto.AccountListRespDto;
 import com.side.workout.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,8 +14,8 @@ import javax.validation.Valid;
 
 import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
 import static com.side.workout.dto.account.AccountReqDto.AccountDepositReqDto;
-import static com.side.workout.dto.account.AccountRespDto.AccountCreateRespDto;
-import static com.side.workout.dto.account.AccountRespDto.AccountDepositRespDto;
+import static com.side.workout.dto.account.AccountRespDto.*;
+import static com.side.workout.service.AccountService.AccountWithdrawReqDto;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -48,5 +47,12 @@ public class AccountController {
     public ResponseEntity<?> depositAccount(@RequestBody @Valid AccountDepositReqDto accountDepositReqDto, BindingResult bindingResult){
         AccountDepositRespDto accountDepositRespDto = accountService.deposit(accountDepositReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "계좌입금 성공", accountDepositRespDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/s/account/withdraw") // 인증 필요없음
+    public ResponseEntity<?> withdrawAccount(@RequestBody @Valid AccountWithdrawReqDto accountWithdrawReqDto, BindingResult bindingResult,
+            @AuthenticationPrincipal LoginUser loginUser){
+        AccountWithdrawRespDto accountWithdrawRespDto = accountService.withdraw(accountWithdrawReqDto, loginUser.getUser().getId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "계좌출금 성공", accountWithdrawRespDto), HttpStatus.CREATED);
     }
 }
