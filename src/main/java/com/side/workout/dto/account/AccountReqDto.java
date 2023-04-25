@@ -11,6 +11,24 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class AccountReqDto {
+
+    @Setter
+    @Getter
+    public static class AccountWithdrawReqDto{
+        @NotNull
+        @Digits(integer = 4, fraction = 10)
+        private Long number;
+        @NotNull
+        @Digits(integer = 4, fraction = 4)
+        private Long password;
+        @NotNull
+        private Long amount;
+        @NotEmpty
+        @Pattern(regexp = "WITHDRAW")
+        private String category;
+
+    }
+
     @Getter
     @Setter
     public static class AccountDepositReqDto{

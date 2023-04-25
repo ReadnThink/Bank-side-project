@@ -8,21 +8,14 @@ import com.side.workout.domain.transaction.TransactionRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
 import com.side.workout.handler.ex.CustomApiException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.Optional;
 
-import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
-import static com.side.workout.dto.account.AccountReqDto.AccountDepositReqDto;
+import static com.side.workout.dto.account.AccountReqDto.*;
 import static com.side.workout.dto.account.AccountRespDto.*;
 
 @RequiredArgsConstructor
@@ -145,21 +138,6 @@ public class AccountService {
         return new AccountWithdrawRespDto(withdrawAccountPS, transactionPS);
     }
 
-    @Setter
-    @Getter
-    public static class AccountWithdrawReqDto{
-        @NotNull
-        @Digits(integer = 4, fraction = 10)
-        private Long number;
-        @NotNull
-        @Digits(integer = 4, fraction = 4)
-        private Long password;
-        @NotNull
-        private Long amount;
-        @NotEmpty
-        @Pattern(regexp = "WITHDRAW")
-        private String category;
 
-    }
 
 }

@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
-import static com.side.workout.dto.account.AccountReqDto.AccountDepositReqDto;
+import static com.side.workout.dto.account.AccountReqDto.*;
 import static com.side.workout.dto.account.AccountRespDto.*;
-import static com.side.workout.service.AccountService.AccountWithdrawReqDto;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -51,7 +49,7 @@ public class AccountController {
 
     @PostMapping("/s/account/withdraw") // 인증 필요없음
     public ResponseEntity<?> withdrawAccount(@RequestBody @Valid AccountWithdrawReqDto accountWithdrawReqDto, BindingResult bindingResult,
-            @AuthenticationPrincipal LoginUser loginUser){
+                                             @AuthenticationPrincipal LoginUser loginUser){
         AccountWithdrawRespDto accountWithdrawRespDto = accountService.withdraw(accountWithdrawReqDto, loginUser.getUser().getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "계좌출금 성공", accountWithdrawRespDto), HttpStatus.CREATED);
     }

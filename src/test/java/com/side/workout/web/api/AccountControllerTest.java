@@ -6,7 +6,6 @@ import com.side.workout.domain.account.Account;
 import com.side.workout.domain.account.AccountRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
-import com.side.workout.dto.account.AccountReqDto;
 import com.side.workout.handler.ex.CustomApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -25,8 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.persistence.EntityManager;
 
-import static com.side.workout.dto.account.AccountReqDto.AccountCreateReqDto;
-import static com.side.workout.service.AccountService.AccountWithdrawReqDto;
+import static com.side.workout.dto.account.AccountReqDto.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -130,7 +128,7 @@ class AccountControllerTest extends DummyObject {
     @Test
     void deposit_account_test() throws Exception {
         //given
-        AccountReqDto.AccountDepositReqDto accountDepositReqDto = new AccountReqDto.AccountDepositReqDto();
+        AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
         accountDepositReqDto.setNumber(1111L);
         accountDepositReqDto.setAmount(100L);
         accountDepositReqDto.setCategory("DEPOSIT");
