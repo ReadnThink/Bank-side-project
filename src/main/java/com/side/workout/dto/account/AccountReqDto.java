@@ -14,6 +14,25 @@ public class AccountReqDto {
 
     @Setter
     @Getter
+    public static class AccountTransferReqDto{
+        @NotNull
+        @Digits(integer = 4, fraction = 10)
+        private Long withdrawNumber;
+        @NotNull
+        @Digits(integer = 4, fraction = 10)
+        private Long depositNumber;
+        @NotNull
+        @Digits(integer = 4, fraction = 4)
+        private Long withdrawPassword;
+        @NotNull
+        private Long amount;
+        @NotEmpty
+        @Pattern(regexp = "TRANSFER")
+        private String category;
+
+    }
+    @Setter
+    @Getter
     public static class AccountWithdrawReqDto{
         @NotNull
         @Digits(integer = 4, fraction = 10)
