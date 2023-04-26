@@ -88,7 +88,7 @@ public class SecurityConfig {
         configuration.addAllowedMethod("*"); // 모든 JS 메서드 허용
         configuration.addAllowedOriginPattern("*"); // 모든 IP 주소 허용
         configuration.setAllowCredentials(true); // 클라이언트에서 쿠키 요청을 허용 -> 쿠키를 주고 받을 수 있습니다.
-
+        configuration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // 모든 주소요청에 위 설정을 적용
         return source;
