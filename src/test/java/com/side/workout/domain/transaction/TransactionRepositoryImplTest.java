@@ -37,6 +37,16 @@ class TransactionRepositoryImplTest extends DummyObject {
     }
 
     @Test
+    void findTransactionList_ALL_test() {
+        // given
+        Long accountId = 1L;
+
+        //when
+
+        //then
+    }
+
+    @Test
     void dataJpa_test1() {
         List<Transaction> transactionList = transactionRepository.findAll();
         transactionList.forEach((transaction -> {
@@ -61,30 +71,30 @@ class TransactionRepositoryImplTest extends DummyObject {
     }
 
     private void dataSetting() {
-        User ssar = userRepository.save(newUser("ssar", "쌀"));
-        User cos = userRepository.save(newUser("cos", "코스,"));
-        User love = userRepository.save(newUser("love", "러브"));
+        User user = userRepository.save(newUser("user", "유저"));
+        User test = userRepository.save(newUser("test", "테스트"));
+        User good = userRepository.save(newUser("good", "굿"));
         User admin = userRepository.save(newUser("admin", "관리자"));
 
-        Account ssarAccount1 = accountRepository.save(newAccount(1111L, ssar));
-        Account cosAccount = accountRepository.save(newAccount(2222L, cos));
-        Account loveAccount = accountRepository.save(newAccount(3333L, love));
-        Account ssarAccount2 = accountRepository.save(newAccount(4444L, ssar));
+        Account userAccount1 = accountRepository.save(newAccount(1111L, user));
+        Account testAccount = accountRepository.save(newAccount(2222L, test));
+        Account goodAccount = accountRepository.save(newAccount(3333L, good));
+        Account userAccount2 = accountRepository.save(newAccount(4444L, user));
 
         Transaction withdrawTransaction1 = transactionRepository
-                .save(newWithdrawTransaction(ssarAccount1, accountRepository));
+                .save(newWithdrawTransaction(userAccount1, accountRepository));
 
         Transaction depositTransaction1 = transactionRepository
-                .save(newDepositTransaction(cosAccount, accountRepository));
+                .save(newDepositTransaction(testAccount, accountRepository));
 
         Transaction transferTransaction1 = transactionRepository
-                .save(newTransferTransaction(ssarAccount1, cosAccount, accountRepository));
+                .save(newTransferTransaction(userAccount1, testAccount, accountRepository));
 
         Transaction transferTransaction2 = transactionRepository
-                .save(newTransferTransaction(ssarAccount1, loveAccount, accountRepository));
+                .save(newTransferTransaction(userAccount1, goodAccount, accountRepository));
 
         Transaction transferTransaction3 = transactionRepository
-                .save(newTransferTransaction(cosAccount, ssarAccount1, accountRepository));
+                .save(newTransferTransaction(testAccount, userAccount1, accountRepository));
     }
 
     private void autoincrementReset(){
