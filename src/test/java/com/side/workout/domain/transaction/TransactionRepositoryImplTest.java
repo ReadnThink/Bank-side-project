@@ -42,7 +42,54 @@ class TransactionRepositoryImplTest extends DummyObject {
         Long accountId = 1L;
 
         //when
+        List<Transaction> transactionListPS = transactionRepository.findTransactionList(accountId, "ALL", 0);
+        transactionListPS.forEach((transaction -> {
+            log.info("테스트 id: {}", transaction.getId());
+            log.info("테스트 금액: {}", transaction.getAmount());
+            log.info("테스트 Sender: {}", transaction.getSender());
+            log.info("테스트 Receiver: {}", transaction.getReceiver());
+            log.info("테스트 입금계좌 잔액: {}", transaction.getDepositAccountBalance());
+            log.info("테스트 출금계좌 잔액: {}", transaction.getWithdrawAccountBalance());
+            log.info("테스트 : ===========================");
+        }));
+        //then
+    }
 
+    @Test
+    void findTransactionList_WITHDRAW_test() {
+        // given
+        Long accountId = 1L;
+
+        //when
+        List<Transaction> transactionListPS = transactionRepository.findTransactionList(accountId, "WITHDRAW", 0);
+        transactionListPS.forEach((transaction -> {
+            log.info("테스트 id: {}", transaction.getId());
+            log.info("테스트 금액: {}", transaction.getAmount());
+            log.info("테스트 Sender: {}", transaction.getSender());
+            log.info("테스트 Receiver: {}", transaction.getReceiver());
+            log.info("테스트 입금계좌 잔액: {}", transaction.getDepositAccountBalance());
+            log.info("테스트 출금계좌 잔액: {}", transaction.getWithdrawAccountBalance());
+            log.info("테스트 : ===========================");
+        }));
+        //then
+    }
+
+    @Test
+    void findTransactionList_DEPOSIT_test() {
+        // given
+        Long accountId = 1L;
+
+        //when
+        List<Transaction> transactionListPS = transactionRepository.findTransactionList(accountId, "DEPOSIT", 0);
+        transactionListPS.forEach((transaction -> {
+            log.info("테스트 id: {}", transaction.getId());
+            log.info("테스트 금액: {}", transaction.getAmount());
+            log.info("테스트 Sender: {}", transaction.getSender());
+            log.info("테스트 Receiver: {}", transaction.getReceiver());
+            log.info("테스트 입금계좌 잔액: {}", transaction.getDepositAccountBalance());
+            log.info("테스트 출금계좌 잔액: {}", transaction.getWithdrawAccountBalance());
+            log.info("테스트 : ===========================");
+        }));
         //then
     }
 
