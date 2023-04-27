@@ -167,4 +167,62 @@ public class AccountRespDto {
         }
     }
 
+    @Getter
+    @Setter
+    public static class AccountDetailRespDto{
+        private Long id;
+        private Long number;
+        private Long balance; // 계좌의 최종 잔액
+        private List<TransactionDto> transactions = new ArrayList<>();
+
+        public AccountDetailRespDto(Account account, List<Transaction> transactions) {
+            this.id = account.getId();
+            this.number = account.getAccountNumber();
+            this.balance = account.getBalance();
+            this.transactions = transactions.stream()
+                    .map((transaction)-> new TransactionDto(transaction,account.getAccountNumber()))
+                    .collect(Collectors.toList());
+        }
+
+        @Getter
+        @Setter
+        public class TransactionDto{
+            private Long id;
+            private String category;
+            private Long amount;
+
+            private String sender;
+            private String receiver;
+
+            private String tel;
+            private String createAt;
+            private Long balance;
+
+            public TransactionDto(Transaction transaction, Long accountNumber) {
+                this.id = transaction.getId();
+                this.category = transaction.getTransaction_category().getValue();
+                this.amount = transaction.getAmount();
+                this.sender = transaction.getSender();
+                this.receiver = transaction.getReceiver();
+                this.createAt = CustomDateUtil.toStringFormat(transaction.getCreateAt());
+                this.tel = transaction.getTel() == null ? "없음" : transaction.getTel();
+
+                // 입출금 계좌 확인
+                if(transaction.getDepositAccount() == null){
+                    this.balance = transaction.getWithdrawAccountBalance();
+                }else if(transaction.getWithdrawAccount() == null){
+                    this.balance = transaction.getDepositAccountBalance();
+                }else {
+                    // 둘 다 있는 경우
+                    if(accountNumber.equals(transaction.getDepositAccount().getAccountNumber())){
+                        // 입금계좌와 동일하다면
+                        this.balance = transaction.getDepositAccountBalance();
+                    }else{
+                        // 입금계좌와 다르면
+                        this.balance = transaction.getWithdrawAccountBalance();
+                    }
+                }
+            }
+        }
+    }
 }

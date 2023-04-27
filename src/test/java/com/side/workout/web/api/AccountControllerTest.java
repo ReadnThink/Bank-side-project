@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.side.workout.config.dummy.DummyObject;
 import com.side.workout.domain.account.Account;
 import com.side.workout.domain.account.AccountRepository;
+import com.side.workout.domain.transaction.Transaction;
+import com.side.workout.domain.transaction.TransactionRepository;
 import com.side.workout.domain.user.User;
 import com.side.workout.domain.user.UserRepository;
 import com.side.workout.handler.ex.CustomApiException;
@@ -25,8 +27,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import javax.persistence.EntityManager;
 
 import static com.side.workout.dto.account.AccountReqDto.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
@@ -49,16 +51,14 @@ class AccountControllerTest extends DummyObject {
     private AccountRepository accountRepository;
 
     @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
     private EntityManager em;
 
     @BeforeEach
     public void setUp(){
-        User userA = userRepository.save(newUser("userA", "유저A"));
-        User userB = userRepository.save(newUser("userB", "유저B"));
-
-        Account userAAccount = accountRepository.save(newAccount(1111L, userA));
-        Account userBAccount = accountRepository.save(newAccount(2222L, userB));
-
+        dataSetting();
         em.clear();
     }
 
@@ -193,5 +193,52 @@ class AccountControllerTest extends DummyObject {
 
         //then
         resultActions.andExpect(status().isCreated());
+    }
+
+    @WithUserDetails(value = "userA", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    void getAccountDetail_test() throws Exception {
+        // given
+        Long number = 1111L;
+        String page = "0";
+
+        //when
+        ResultActions resultActions = mockMvc.
+                perform(get("/api/s/account/"+number).param("page", page));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.info("테스트 : responseBody {}", responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.data.transactions[0].balance").value(900L));
+        resultActions.andExpect(jsonPath("$.data.transactions[1].balance").value(800L));
+        resultActions.andExpect(jsonPath("$.data.transactions[2].balance").value(700L));
+        resultActions.andExpect(jsonPath("$.data.transactions[3].balance").value(800L));
+    }
+
+    private void dataSetting() {
+        User user = userRepository.save(newUser("userA", "유저"));
+        User test = userRepository.save(newUser("test", "테스트"));
+        User good = userRepository.save(newUser("good", "굿"));
+        User admin = userRepository.save(newUser("admin", "관리자"));
+
+        Account userAccount1 = accountRepository.save(newAccount(1111L, user));
+        Account testAccount = accountRepository.save(newAccount(2222L, test));
+        Account goodAccount = accountRepository.save(newAccount(3333L, good));
+        Account userAccount2 = accountRepository.save(newAccount(4444L, user));
+
+        Transaction withdrawTransaction1 = transactionRepository
+                .save(newWithdrawTransaction(userAccount1, accountRepository));
+
+        Transaction depositTransaction1 = transactionRepository
+                .save(newDepositTransaction(testAccount, accountRepository));
+
+        Transaction transferTransaction1 = transactionRepository
+                .save(newTransferTransaction(userAccount1, testAccount, accountRepository));
+
+        Transaction transferTransaction2 = transactionRepository
+                .save(newTransferTransaction(userAccount1, goodAccount, accountRepository));
+
+        Transaction transferTransaction3 = transactionRepository
+                .save(newTransferTransaction(testAccount, userAccount1, accountRepository));
     }
 }

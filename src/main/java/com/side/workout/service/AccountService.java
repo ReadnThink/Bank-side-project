@@ -189,4 +189,20 @@ public class AccountService {
         return new AccountTransferRespDto(withdrawAccountPS, transactionPS);
     }
 
+    public AccountDetailRespDto getAccountDetail(Long number, Long userId, Integer page){
+        String category = "ALL";
+
+        // 출금 계좌 확인
+        Account accountPS = accountRepository.findByAccountNumber(number)
+                .orElseThrow(
+                        () -> new CustomApiException("계좌를 찾을 수 없습니다.")
+                );
+
+        // 소유자 확인 (로그인한 사람과 동일한지)
+        accountPS.checkOwner(userId);
+
+        // 입출금 목록보기
+        List<Transaction> transactionListPS = transactionRepository.findTransactionList(accountPS.getId(), category, page);
+        return new AccountDetailRespDto(accountPS, transactionListPS);
+    }
 }

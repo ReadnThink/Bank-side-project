@@ -56,7 +56,7 @@ class TransactionControllerTest extends DummyObject {
         em.clear();
     }
 
-    @WithUserDetails(value = "user", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "userA", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     void findTransactionList_test() throws Exception {
         // given
@@ -78,7 +78,7 @@ class TransactionControllerTest extends DummyObject {
     }
 
     private void dataSetting() {
-        User user = userRepository.save(newUser("user", "유저"));
+        User user = userRepository.save(newUser("userA", "유저"));
         User test = userRepository.save(newUser("test", "테스트"));
         User good = userRepository.save(newUser("good", "굿"));
         User admin = userRepository.save(newUser("admin", "관리자"));
