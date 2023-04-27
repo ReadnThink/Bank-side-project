@@ -27,6 +27,8 @@ public class TransactionRepositoryImpl implements Dao{
         sql += "select t from Transaction t ";
 
         if(category.equals("WITHDRAW")){
+            // fetch를 하지 않으면 select시에 projection을 하지 않는다... (N + 1 문제발생)
+            // Lazy -> Eager 하기위함
             sql += "join fetch t.withdrawAccount wa ";
             sql += "where t.withdrawAccount.id = :withdrawAccountId";
         }else if(category.equals("DEPOSIT")){
